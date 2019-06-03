@@ -1,0 +1,78 @@
+{% extends 'database/database.html' %}
+{% block navbarsearch %}
+<li class="nav-item active"><a class="nav-link" href="#">Search</a></li>
+{% endblock %}
+{% block title %}Search{% endblock %}
+{% block text %}
+    <h2>Search</h2>
+
+    <form method="get" action="." name="search_form">
+        <table>
+            {% for field in form %}
+                {% if field.shown %}
+                    <tr><td> {{ field.errors }} </td></tr>
+                    <tr> <td>{{ field.label_tag }}</td><td>{{ field }}</td></tr>
+                    {% if field.help_text %}
+                        <tr class="help"><td>{{ field.help_text|safe }}</td></tr>
+                    {% endif %}
+                {% else %}
+                    <tr class="non-profile-only"><td> {{ field.errors }} </td></tr>
+                    <tr class="non-profile-only"> <td>{{ field.label_tag }}</td><td>{{ field }}</td></tr>
+                    {% if field.help_text %}
+                        <tr class="help" class="non-profile-only"><td>{{ field.help_text|safe }}</td></tr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" value="Search">
+                </td>
+            </tr>
+        </table>
+
+        {% if query %}
+            <h3>Results</h3>
+            <ul>
+            {% for result in page_obj.object_list %}
+                <li>
+                    <a href="{{ result.object.get_absolute_url }}">{{ result.object }}</a>
+                </li>
+            {% empty %}
+                </ul>
+                <p>No results found.</p>
+                <ul>
+            {% endfor %}
+            </ul>
+            {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+    </form>
+{% endblock %}
+{% block additionalscripts %}
+<script>
+$(document).ready(function(){
+    $("#id_searching_for").change(function(event) {
+        x = document.forms["search_form"]["id_searching_for"].value
+        if(x=='3'){
+            $("label[for='id_filter_start_date']").hide();
+            $("label[for='id_filter_end_date']").hide();
+            $("#id_filter_start_date").hide();
+            $("#id_filter_end_date").hide();
+        } else {
+            $("label[for='id_filter_start_date']").show();
+            $("label[for='id_filter_end_date']").show();
+            $("#id_filter_start_date").show();
+            $("#id_filter_end_date").show();
+        }
+    });
+});
+</script>
+{% endblock %}

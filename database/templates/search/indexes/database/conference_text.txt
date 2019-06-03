@@ -1,0 +1,11 @@
+{{ object.name }}
+{{ object.short_name }}
+{{ object.category }}
+{{ object.information }}
+{{ object.coordinator.first_name }}
+{{ object.coordinator.last_name }}
+{{ object.coordinator.institution }}
+{{ object.coordinator.user.username }}
+{{ object.coordinator.information }}
+{{ object.country }}
+{{ object.town }}

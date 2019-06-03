@@ -1,0 +1,35 @@
+{% extends 'database/database.html' %}
+{% block navbarhome %}
+<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+{% endblock %}
+{% block title %}Homepage{% endblock %}
+{% block text %}
+<h1>Home</h1>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<h3>Conferences</h3>
+{% if conference_list %}
+<ul>
+    {% for conference in conference_list %}
+    <li><a href="{{ conference.get_absolute_url }}">{{ conference.name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p> No conferences available </p>
+{% endif %}
+<h3>Presentations</h3>
+{% if presentation_list %}
+<ul>
+    {% for presentation in presentation_list %}
+    <li><a href="{{ presentation.get_absolute_url }}">{{ presentation }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p> No presentations available </p>
+{% endif %}
+{% endblock %}

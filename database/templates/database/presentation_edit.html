@@ -1,0 +1,12 @@
+{% extends 'database/database.html' %}
+{% block navbarconference %}
+<li class="nav-item active"><a class="nav-link" href="{% url 'database:presentations' %}">Presentations</a></li>
+{% endblock %}
+{% block title %}{{ presentation.name }}{% endblock %}
+{% block text %}
+<form action="." method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

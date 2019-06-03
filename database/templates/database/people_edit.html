@@ -1,0 +1,12 @@
+{% extends 'database/database.html' %}
+{% block navbarconference %}
+<li class="nav-item active"><a class="nav-link" href="{% url 'database:people' %}">People</a></li>
+{% endblock %}
+{% block title %}{{ userprofile.last_name }}, {{ userprofile.first_name }}{% endblock %}
+{% block text %}
+<form action="." method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

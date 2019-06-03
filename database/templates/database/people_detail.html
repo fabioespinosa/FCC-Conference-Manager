@@ -1,0 +1,38 @@
+{% extends 'database/database.html' %}
+{% block navbarpeople %}
+<li class="nav-item active"><a class="nav-link" href="{% url 'database:people' %}">People</a></li>
+{% endblock %}
+{% block title %}{{ userprofile.last_name }}, {{ userprofile.first_name }}{% endblock %}
+{% block text %}
+<h1>{{ userprofile.title }} {{ userprofile.first_name }} {{ userprofile.last_name }} {% if userprofile.user.id == user.id %}<a href="{% url 'database:people_edit' pk=userprofile.id %}">(edit)</a>{% endif %}</h1>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<h4>Institution: {{ userprofile.institution }}</h4>
+<h3>About</h3>
+<p>{{ userprofile.information }}</p>
+<h3> Organized Conferences </h3>
+{% if userprofile.coordinator %}
+    <ul>
+        {% for conference in conference_list %}
+            <li>{{ conference.start_date }}-{{ conference.end_date }}: <a href="{{ conference.get_absolute_url }}">{{ conference.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p> No conferences organized. </p>
+{% endif %}
+<h3> Presentations Given </h3>
+{% if userprofile.speaker %}
+    <ul>
+        {% for presentation in presentation_list %}
+            <li>{{ presentation.date }}: <a href="{{ presentation.get_absolute_url }}">{{ presentation.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p> No presentations given. </p>
+{% endif %}
+{% endblock %}

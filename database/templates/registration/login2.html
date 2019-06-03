@@ -1,0 +1,25 @@
+{% extends 'database/database.html' %}
+
+{% block text %}
+<h1>Login</h1>
+{% if form.errors %}
+<div class="alert alert-warning"><strong>Login Failure:</strong> Your credentials were invalid.</div>
+{% endif %}
+<form role="form" method="post" action".">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_username">Username:</label>
+        {{ form.username }}
+    </div>
+    <div class="form-group">
+        <label for="id_password">Password:</label>
+        {{ form.password }}
+    </div>
+    {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+    {% else %}
+        <input type="hidden" name="next" value="{% url 'database:index' %}" />
+    {% endif %}
+    <input class="btn btn-default" type="submit" value="Login" />
+</form>
+{% endblock %}

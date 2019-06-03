@@ -1,0 +1,10 @@
+{{ object.title }}
+{{ object.abstract }}
+{{ object.category }}
+{{ object.group }}
+{{ object.information }}
+{{ object.conference.name }}
+{{ object.conference.short_name }}
+{{ object.speaker.first_name }}
+{{ object.speaker.last_name }}
+{{ object.speaker.institution }}

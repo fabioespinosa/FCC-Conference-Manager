@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load staticfiles%}
+
+{% block header %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}" >
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+<!-- <link rel="stylesheet" href="{% static "conference/output.css" %}" > -->
+
+<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+<title>{% block title %}{% endblock %}</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'database:index' %}">Conference Database</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            {% block navbarhome %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:index' %}">Home</a></li>
+            {% endblock %}
+            {% block navbarconference %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:conferences' %}">Conferences</a></li>
+            {% endblock %}
+            {% block navbarpresentation %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:presentations' %}">Presentations</a></li>
+            {% endblock %}
+            {% block navbarpeople %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:people' %}">People</a></li>
+            {% endblock %}
+            {% block navbarsearch %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:search' %}">Search</a></li>
+            {% endblock %}
+        </ul>
+        {% if user.username %}
+        <ul class="navbar-nav">
+            {% if user.userprofile %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'database:user_profile_detail' user.userprofile.id %}"><span class="glyphicon glyphicon-user"></span>{{ user.username }}'s Profile</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'database:user_detail' user.id %}"><span class="glyphicon glyphicon-user"></span>{{ user.username }}'s Profile</a></li>
+            {% endif %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'database:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:register' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="container-fluid">
+
+    <p>{{ user.userProfile }} </p>
+    {% block text %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% block additionalscripts %}{% endblock %}
+{% endblock %}

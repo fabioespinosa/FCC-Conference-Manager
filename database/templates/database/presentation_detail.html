@@ -1,0 +1,23 @@
+{% extends 'database/database.html' %}
+{% block navbarpresentation %}
+<li class="nav-item active"><a class="nav-link" href="{% url 'database:presentations' %}">Presentations</a></li>
+{% endblock %}
+{% block title %}{{ presentation.title }}{% endblock %}
+{% block text %}
+<h1>{{ presentation.title }} {% if presentation.speaker.user.id == user.id %}<a href="{% url 'database:presentation_edit' conference_id=presentation.conference.id pk=presentation.id%}">(edit)</a>{% endif %}</h1>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<h4>Date: {{ presentation.date }} </h4>
+<h4>Field: {{ presentation.category }}</h4>
+<h5>Speaker: <a href="{{ presentation.speaker.get_absolute_url }}"> {{ presentation.speaker.title }} {{ presentation.speaker.first_name }} {{ presentation.speaker.last_name }}</a></h5>
+<h5>Conference: <a href="{{ presentation.conference.get_absolute_url }}">{{ presentation.conference.name }}</a></h5>
+<h3> Abstract </h3>
+<p>{{ presentation.abstract }}</p>
+<h3> Other Information </h3>
+<p>{{ presentation.information }}</p>
+{% endblock %}

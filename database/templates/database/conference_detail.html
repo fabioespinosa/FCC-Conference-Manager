@@ -1,0 +1,32 @@
+{% extends 'database/database.html' %}
+{% block navbarconference %}
+<li class="nav-item active"><a class="nav-link" href="{% url 'database:conferences' %}">Conferences</a></li>
+{% endblock %}
+{% block title %}{{ conference.name }}{% endblock %}
+{% block text %}
+{% if conference.coordinator.user.id == user.id %}
+<h1> <a href="{{ conference.url }}">{{ conference.name }}</a> ({{ conference.short_name }}) <a href="{% url 'database:conference_edit' pk=conference.id %}">(edit)</a></h1>
+{% else %}
+<h1> <a href="{{ conference.url }}">{{ conference.name }}</a> ({{ conference.short_name }})</h1>
+{% endif %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<h4> Location: {{ conference.town }}, {{ conference.country }}</h4>
+<h5> From {{ conference.start_date }} to {{ conference.end_date }}</h5>
+<h5> Coordinator: <a href="{{conference.coordinator.get_absolute_url }}">{{ conference.coordinator.title }} {{ conference.coordinator.first_name }} {{ conference.coordinator.last_name }}</a></h5>
+<h5> Field: {{ conference.category }}</h5>
+<h2>About </h2>
+<p>{{ conference.information }}</p>
+
+<h2> Presentations </h2>
+<ul>
+{% for presentation in conference.presentation_set.all %}
+    <li><a href="{{ presentation.get_absolute_url }}"> {{ presentation.title }} </a></li>
+{% endfor %}
+</ul>
+{% endblock %}

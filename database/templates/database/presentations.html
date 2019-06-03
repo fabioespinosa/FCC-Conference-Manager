@@ -1,0 +1,24 @@
+{% extends 'database/database.html' %}
+{% block navbarpresentation %}
+<li class="nav-item active"><a class="nav-link" href="#">Presentations</a></li>
+{% endblock %}
+{% block title %}Presentations{% endblock %}
+{% block text %}
+    <h1> Presentations </h1>
+    {% if presentation_list %}
+        <ul>
+        {% for presentation in presentation_list %}
+            <li>{{ presentation.date }}: <a href="{{ presentation.get_absolute_url }}">{{ presentation.title }}</a></li>
+        {% endfor %}
+        </ul>
+        {% if page_obj.has_previous or page_obj.has_next %}
+            <div>
+                {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">{% endif %}&laquo; Previous{% if page_obj.has_previous %}</a>{% endif %}
+                |
+                {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">{% endif %}Next &raquo;{% if page_obj.has_next %}</a>{% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p> No presentations available </p>
+    {% endif %}
+{% endblock %}
