@@ -92,9 +92,12 @@ DATABASES = {
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_urop',
-        'USER': 'fabioespinosa'
+        'ENGINE': config('DJANGO_DATABASE_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config('DJANGO_DATABASE_NAME', default='django_urop'),
+        'USER': config('DJANGO_DATABASE_USER', default='fabioespinosa'),
+        'PASSWORD': config('DJANGO_DATABASE_PASSWORD', default=''),
+        'HOST': config('DJANGO_DATABASE_HOST', default=''),
+        'PORT': config('DJANGO_DATABASE_PORT', default=''),
     }
 }
 
