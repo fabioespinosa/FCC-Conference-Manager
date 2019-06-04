@@ -4,3 +4,4 @@ libsass
 elasticsearch
 django-bootstrap4
 django-allauth
+python-decouple==3.1
