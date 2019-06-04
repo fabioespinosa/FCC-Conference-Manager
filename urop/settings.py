@@ -18,6 +18,13 @@ from decouple import config
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+print(os.environ(['DJANGO_DEBUG']))
+       print(os.environ(['DJANGO_DATABASE_ENGINE'])
+        print(os.environ(['DJANGO_DATABASE_NAME'])
+        print(os.environ(['DJANGO_DATABASE_USER'])
+        print(os.environ(['DJANGO_DATABASE_PASSWORD'])
+        print(os.environ(['DJANGO_DATABASE_HOST'])
+        print(os.environ(['DJANGO_DATABASE_PORT'])
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
