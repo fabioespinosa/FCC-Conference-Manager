@@ -6,14 +6,14 @@ from django.urls import reverse
 
 
 class UserProfile(models.Model):
-    # UserProfile is different then auth_user, 
+    # UserProfile is different then auth_user,
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     institution = models.CharField(max_length=200)
     title = models.CharField(max_length=50)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=200)
-    status = models.CharField(max_length=200)
-    information = models.CharField(max_length=6000)
+    status = models.TextField()
+    information = models.TextField()
     speaker = models.BooleanField(default=False)
     coordinator = models.BooleanField(default=False)
 
@@ -26,16 +26,16 @@ class UserProfile(models.Model):
 
 class Conference(models.Model):
     coordinator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    name = models.CharField(max_length=500)
+    name = models.TextField()
     short_name = models.CharField(max_length=200)
     start_date = models.DateField('Start Date')
     end_date = models.DateField('End Date')
     category = models.CharField(max_length=200)
-    status = models.CharField(max_length=200)
+    status = models.TextField()
     url = models.URLField(max_length=500)
     country = models.CharField(max_length=300)
     town = models.CharField(max_length=200)
-    information = models.TextField(max_length=5000)
+    information = models.TextField()
 
     def __str__(self):
         return self.name
@@ -47,14 +47,13 @@ class Conference(models.Model):
 class Presentation(models.Model):
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
     speaker = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    abstract = models.TextField(max_length=5000)
-    length = models.DurationField()
+    title = models.TextField()
+    abstract = models.TextField()
     date = models.DateField('Presentation Date')
     category = models.CharField(max_length=200)
     group = models.CharField(max_length=200)
-    status = models.CharField(max_length=200)
-    information = models.TextField(max_length=5000)
+    status = models.TextField()
+    information = models.TextField()
 
     def __str__(self):
         return self.title

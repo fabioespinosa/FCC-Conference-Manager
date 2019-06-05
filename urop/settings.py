@@ -19,12 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 print(os.environ.get('DJANGO_DEBUG'))
-print(os.environ.get('DJANGO_DATABASE_ENGINE'))
-print(os.environ.get('DJANGO_DATABASE_NAME'))
-print(os.environ.get('DJANGO_DATABASE_USER'))
-print(os.environ.get('DJANGO_DATABASE_PASSWORD'))
-print(os.environ.get('DJANGO_DATABASE_HOST'))
-print(os.environ.get('DJANGO_DATABASE_PORT'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -32,9 +26,13 @@ print(os.environ.get('DJANGO_DATABASE_PORT'))
 SECRET_KEY = '=*5i*1@^@xjhr5m9mm79vgi0+d7=gt_&td0db)!(a)vi$+=5as'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =  config('DJANGO_DEBUG', default=False, cast=bool)
+DEBUG =  config('DJANGO_DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['*','0.0.0.0']
+ALLOWED_HOSTS = [
+    config('DJANGO_ALLOWED_HOSTS', default='localhost'),
+    '*',
+    '0.0.0.0'
+]
 
 
 # Application definition
