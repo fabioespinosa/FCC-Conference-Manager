@@ -1,3 +1,11 @@
-{
-    "python.pythonPath": "venv/bin/python3.6"
-}
+[
+    {
+        "name": "Python: Django",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder}/manage.py",
+        "console": "integratedTerminal",
+        "args": ["runserver", "--noreload"],
+        "django": true
+    }
+]

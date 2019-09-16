@@ -1,11 +1,40 @@
 {% extends 'base.html' %}
 {% load staticfiles%}
+{% load static %}
 
 {% block header %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}" >
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+    // To allow sending AJAX requests with permissions (see https://stackoverflow.com/a/5107878/4619199)
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                // Only send the token to relative URLs i.e. locally.
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        }
+    });
+</script>
+<script src="{% static "javascript/particles.min.js" %}"></script>
 <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+
 <!-- <link rel="stylesheet" href="{% static "conference/output.css" %}" > -->
 
 <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
@@ -14,7 +43,7 @@
 
 {% block body %}
 <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'database:index' %}">Conference Database</a>
+        <a class="navbar-brand" href="{% url 'database:index' %}"><img class="fcc_logo" src="{% static "images/fcc_logo.png" %}"/>FCC Conference</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
     </button>
@@ -53,13 +82,45 @@
         {% endif %}
     </div>
 </nav>
-
+{% if message_list %}
+    {% for message in message_list %}
+        <div class="alert alert-info" role="alert">
+            <strong>New message from {{ message.message_from.first_name }} {{message.message_from.last_name}}:</strong> 
+            {{message}}
+            <button type="submit" class="close"  aria-label="Close" title="Mark message as seen">
+                <a class="mark_message_seen" data-url="{% url 'database:user_message' message.id %}" data-method="PUT"><span aria-hidden="true">&times;</span></a>
+            </button>
+        </div>
+    {% endfor %}
+{% else %}
+{% endif %}
 <div class="container-fluid">
-
-    <p>{{ user.userProfile }} </p>
     {% block text %}{% endblock %}
 </div>
+
+
+<script>
+// Mark a message as seen:
+$('.mark_message_seen').on('click', function(event){
+    event.preventDefault();
+    $.ajax({
+        url: $(this).data('url'),
+        method: $(this).data('method'),
+        success: document.location.reload()
+    })
+
+})
+</script>
+
+<style>
+    .fcc_logo {
+        width: 100px;
+    }
+</style>
+
 {% endblock %}
+
+
 
 {% block scripts %}
 {% block additionalscripts %}{% endblock %}

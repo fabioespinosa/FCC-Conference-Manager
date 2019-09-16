@@ -26,7 +26,7 @@ print(os.environ.get('DJANGO_DEBUG'))
 SECRET_KEY = '=*5i*1@^@xjhr5m9mm79vgi0+d7=gt_&td0db)!(a)vi$+=5as'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =  config('DJANGO_DEBUG', default=True, cast=bool)
+DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     config('DJANGO_ALLOWED_HOSTS', default='localhost'),
@@ -52,9 +52,14 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.cern',
+    'widget_tweaks',
+    'django_filters',
+    'debug_toolbar'
+
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,6 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'database.context_processors.user_messages'
             ],
         },
     },
@@ -169,3 +175,9 @@ ADMINS = [('Fabio Espinosa', 'f.e@cern.ch')]
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi/static')
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]

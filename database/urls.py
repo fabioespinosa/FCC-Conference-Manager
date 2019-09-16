@@ -1,5 +1,8 @@
-from django.conf.urls import url, include
+from django.conf import settings
+from django.conf.urls import url
+from django.urls import include, path
 from django.contrib.auth import views as auth_views
+from django_filters.views import FilterView
 from . import views, search_views
 
 app_name = 'database'
@@ -31,4 +34,16 @@ urlpatterns = [
 
     url(r"^logout/", views.logout_view, name="logout"),
     url(r"^logout-status/", views.logout_status, name="logout_status"),
+    url(r"^messages/(?P<id>[0-9]+)/$",
+        views.MessageView.as_view(), name="user_message")
 ]
+
+# if settings.DEBUG:
+import debug_toolbar
+urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
+
+    # For django versions before 2.0:
+    # url(r'^__debug__/', include(debug_toolbar.urls)),
+
+] + urlpatterns

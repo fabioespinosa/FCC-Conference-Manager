@@ -5,6 +5,7 @@
 {% block title %}Conferences{% endblock %}
 {% block text %}
     <h1> Conferences </h1>
+    {% include "database/components/filter.html" %}
     {% if conference_list %}
         <ul>
         {% for conference in conference_list %}

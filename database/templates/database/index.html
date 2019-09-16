@@ -1,35 +1,133 @@
-{% extends 'database/database.html' %}
-{% block navbarhome %}
+{% extends 'database/database.html' %} {% block navbarhome %}
 <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-{% endblock %}
-{% block title %}Homepage{% endblock %}
-{% block text %}
-<h1>Home</h1>
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+{% endblock %} {% block title %}Homepage{% endblock %} {% block text %}
+
+<div id="particles-js"></div>
+<div class="title">
+    <h1 class="title_text">Welcome to the FCC Conference Manager</h1>
+</div>
+<div class="content">
+    <h3>Conferences</h3>
+    {% if conference_list %}
+    <ul>
+        {% for conference in conference_list %}
+        <li>
+            <a href="{{ conference.get_absolute_url }}">
+                {{ conference.name }}</a
+            >
+        </li>
         {% endfor %}
     </ul>
-{% endif %}
-<h3>Conferences</h3>
-{% if conference_list %}
-<ul>
-    {% for conference in conference_list %}
-    <li><a href="{{ conference.get_absolute_url }}">{{ conference.name }}</a></li>
-    {% endfor %}
-</ul>
-{% else %}
-<p> No conferences available </p>
-{% endif %}
-<h3>Presentations</h3>
-{% if presentation_list %}
-<ul>
-    {% for presentation in presentation_list %}
-    <li><a href="{{ presentation.get_absolute_url }}">{{ presentation }}</a></li>
-    {% endfor %}
-</ul>
-{% else %}
-<p> No presentations available </p>
-{% endif %}
+    {% else %}
+    <p>
+        {% if user.username %} User {{ user.username }} is not yet part of any
+        conference. <a href="">(see conferences)</a>
+        {% else %} No conferences available {% endif %}
+    </p>
+    {% endif %}
+    <h3>Presentations</h3>
+    {% if presentation_list %}
+    <ul>
+        {% for presentation in presentation_list %}
+        <li>
+            <a href="{{ presentation.get_absolute_url }}">{{ presentation }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>
+        {% if user.username %} User {{ user.username }} is not yet assigned any
+        presentation. {% else %} No presentations available {% endif %}
+    </p>
+
+    {% endif %}
+</div>
+
+<style>
+    .title {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        height: 100vh;
+    }
+    h1 {
+        display: flex;
+        align-self: center;
+    }
+
+    #particles-js {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+
+    .content {
+        background-image: white;
+        z-index: 1000;
+    }
+</style>
+
+<script>
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 100, density: { enable: true, value_area: 800 } },
+            color: { value: '#333' },
+            shape: {
+                type: 'circle',
+                stroke: { width: 0, color: '#000000' },
+                polygon: { nb_sides: 5 },
+                image: { src: 'img/github.svg', width: 100, height: 100 }
+            },
+            opacity: {
+                value: 0.5,
+                random: false,
+                anim: { enable: false, speed: 1, opacity_min: 0.1, sync: false }
+            },
+            size: {
+                value: 3,
+                random: true,
+                anim: { enable: false, speed: 40, size_min: 0.1, sync: false }
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#ffffff',
+                opacity: 0.4,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 6,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false,
+                attract: { enable: false, rotateX: 600, rotateY: 1200 }
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: { enable: false, mode: 'repulse' },
+                onclick: { enable: true, mode: 'push' },
+                resize: true
+            },
+            modes: {
+                grab: { distance: 400, line_linked: { opacity: 1 } },
+                bubble: {
+                    distance: 0,
+                    size: 40,
+                    duration: 5,
+                    opacity: 8,
+                    speed: 10
+                },
+                repulse: { distance: 10, duration: 0.4 },
+                push: { particles_nb: 100 },
+                remove: { particles_nb: 2 }
+            }
+        },
+        retina_detect: true
+    });
+</script>
 {% endblock %}

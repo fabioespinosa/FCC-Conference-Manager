@@ -6,7 +6,7 @@ from django.urls import reverse
 
 
 class UserProfile(models.Model):
-    # UserProfile is different then auth_user,
+    # UserProfile is different than auth_user,
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     institution = models.CharField(max_length=200)
     title = models.CharField(max_length=50)
@@ -24,9 +24,26 @@ class UserProfile(models.Model):
         return reverse('database:people_detail', args=[str(self.id)])
 
 
+class UserMessage(models.Model):
+    # Message sent to users (usually from admin)
+    message = models.TextField()
+    seen = models.BooleanField(default=False)
+    message_to = models.ForeignKey(
+        UserProfile, related_name='messages_received', on_delete=models.CASCADE)
+    message_from = models.ForeignKey(
+        UserProfile, related_name='messages_sent', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.message
+
+    def get_absolute_url(self):
+        return reverse('database:message_detail', args=[str(self.id)])
+
+
 class Conference(models.Model):
-    coordinator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     name = models.TextField()
+    assistants = models.ManyToManyField(
+        UserProfile, through='ConferenceAssistance', through_fields=('conference', 'assistant'), related_name="user_conferences")
     short_name = models.CharField(max_length=200)
     start_date = models.DateField('Start Date')
     end_date = models.DateField('End Date')
@@ -44,9 +61,20 @@ class Conference(models.Model):
         return reverse('database:conference_detail', args=[str(self.id)])
 
 
+class ConferenceAssistance(models.Model):
+    conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
+    assistant = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    coordinator = models.BooleanField(default=False)
+    join_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.conference + '-' + self.assistant
+
+
 class Presentation(models.Model):
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
-    speaker = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    speaker = models.ForeignKey(
+        UserProfile, null=True, on_delete=models.CASCADE)
     title = models.TextField()
     abstract = models.TextField()
     date = models.DateField('Presentation Date')

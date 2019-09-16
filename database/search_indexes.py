@@ -1,5 +1,6 @@
 from haystack import indexes
-from database.models import Conference,Presentation,UserProfile
+from database.models import Conference, Presentation, UserProfile
+
 
 class ConferenceIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -12,6 +13,7 @@ class ConferenceIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         return self.get_model().objects.all()
 
+
 class PresentationIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     date = indexes.DateField(model_attr="date")
@@ -21,6 +23,7 @@ class PresentationIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         return self.get_model().objects.all()
+
 
 class ProfileIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)

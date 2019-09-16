@@ -6,18 +6,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import render
-from .models import Conference, Presentation, UserProfile
+from django_filters.views import FilterView
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.db.models import Q
 from django.views.generic.detail import SingleObjectMixin
 from itertools import chain
 from django.urls import reverse, reverse_lazy
-from .forms import PasswordChangeForm
-from django.http import HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django import forms
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import RegistrationForm, EditPeopleForm, EditConferenceForm, EditPresentationForm
 from django.utils import timezone
+from .forms import RegistrationForm, EditPeopleForm, EditConferenceForm, EditPresentationForm
+from .forms import PasswordChangeForm
+from .models import Conference, Presentation, UserProfile, UserMessage
+from .filters import ConferenceFilter
 
 
 class IndexView(generic.TemplateView):
@@ -25,10 +27,17 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['conference_list'] = Conference.objects.filter(
-            start_date__lte=timezone.now()).order_by('-start_date')[:5]
-        context['presentation_list'] = Presentation.objects.filter(
-            date__lte=timezone.now()).order_by('-date')[:5]
+        user = self.request.user
+        if user.is_authenticated:
+            userprofile = user.userprofile
+            context['conference_list'] = userprofile.user_conferences.all()
+            context['presentation_list'] = userprofile.presentation_set.all()
+        else:
+            context['conference_list'] = Conference.objects.filter(
+                start_date__lte=timezone.now()).order_by('-start_date')[:5]
+            context['presentation_list'] = Presentation.objects.filter(
+                date__lte=timezone.now()).order_by('-date')[:5]
+
         return context
 
 
@@ -75,17 +84,11 @@ class LogoutView(generic.RedirectView):
         return super(LogoutView, self).get(request, *args, **kwargs)
 
 
-class ConferenceView(LoginRequiredMixin, generic.ListView):
+class ConferenceView(LoginRequiredMixin, FilterView):
     template_name = 'database/conferences.html'
     context_object_name = 'conference_list'
     login_url = reverse_lazy('database:login')
-
-    def get_context_data(self, **kwargs):
-        context = super(ConferenceView, self).get_context_data(**kwargs)
-        return context
-
-    def get_queryset(self):
-        return Conference.objects.order_by('-id')
+    filterset_class = ConferenceFilter
 
 
 class ConferenceDetailView(LoginRequiredMixin, generic.DetailView):
@@ -249,6 +252,14 @@ class UserView(LoginRequiredMixin, generic.DetailView):
     model = User
     template_name = 'database/user_detail.html'
     login_url = reverse_lazy('database:login')
+
+
+class MessageView(generic.View):
+
+    # Mark message as seen
+    def put(self, request, id):
+        UserMessage.objects.filter(id=id).update(seen=True)
+        return HttpResponse('')
 
 
 @login_required

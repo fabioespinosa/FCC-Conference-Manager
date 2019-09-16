@@ -1,0 +1,30 @@
+{% load widget_tweaks %}
+<form action=""  method="get">
+    <div class="container">
+        <div class="row top-buffer">
+            <div class="col col-sm-2 vcenter text-right">
+                <strong>Name:</strong>
+            </div>
+            <div class="col col-sm-10 vcenter text-left">
+                {% render_field filter.form.name %}
+            </div>
+        </div>
+        <div class="row top-buffer">
+                <div class="col col-sm-2 vcenter text-right">
+                    <strong>Country:</strong>
+                </div>
+                <div class="col col-sm-10 vcenter text-left">
+                    {% render_field filter.form.country %}
+                </div>
+        </div>
+        <div class="row top-buffer">
+                <div class="col col-sm-2 vcenter text-right">
+                    <strong>Year:</strong>
+                </div>
+                <div class="col col-sm-10 vcenter text-left">
+                    {% render_field filter.form.year %}
+                </div>
+        </div>
+    </div>
+    <button type="submit">Filter</button>
+</form>
