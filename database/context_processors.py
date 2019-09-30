@@ -7,7 +7,7 @@ def user_messages(request):
     user = request.user
     message_list = {'message_list': []}
     if user.is_authenticated:
-        userprofile = UserProfile.objects.get_or_create(user=user)
+        userprofile = UserProfile.objects.get_or_create(user=user)[0]
         message_list['message_list'] = userprofile.messages_received.filter(
             seen=False)
 
