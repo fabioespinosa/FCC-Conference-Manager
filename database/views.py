@@ -29,7 +29,7 @@ class IndexView(generic.TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         user = self.request.user
         if user.is_authenticated:
-            userprofile = user.userprofile
+            userprofile = UserProfile.objects.get_or_create(user=user)[0]
             context['conference_list'] = userprofile.user_conferences.all()
             context['presentation_list'] = userprofile.presentation_set.all()
         else:
