@@ -1,23 +1,107 @@
 {% extends 'database/database.html' %}
+{% load static %} 
+
 {% block navbarpresentation %}
 <li class="nav-item active"><a class="nav-link" href="{% url 'database:presentations' %}">Presentations</a></li>
 {% endblock %}
 {% block title %}{{ presentation.title }}{% endblock %}
 {% block text %}
-<h1>{{ presentation.title }} {% if presentation.speaker.user.id == user.id %}<a href="{% url 'database:presentation_edit' conference_id=presentation.conference.id pk=presentation.id%}">(edit)</a>{% endif %}</h1>
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-<h4>Date: {{ presentation.date }} </h4>
-<h4>Field: {{ presentation.category }}</h4>
-<h5>Speaker: <a href="{{ presentation.speaker.get_absolute_url }}"> {{ presentation.speaker.title }} {{ presentation.speaker.first_name }} {{ presentation.speaker.last_name }}</a></h5>
-<h5>Conference: <a href="{{ presentation.conference.get_absolute_url }}">{{ presentation.conference.name }}</a></h5>
-<h3> Abstract </h3>
-<p>{{ presentation.abstract }}</p>
-<h3> Other Information </h3>
-<p>{{ presentation.information }}</p>
-{% endblock %}
+
+<div id="content" class="clearfix">
+        <div class="boxElement information">
+            <center>
+                This presentation belongs to conference: <br>
+                <a href="{{ presentation.conference.get_absolute_url }}"> {{presentation.conference.name}}</a>
+
+            </center>
+            </div>
+        <div class="columns">
+            <div class="column column-left">
+                
+                <div class="boxElement">
+                    <div class="insideImage" style="background-image: url({% static "images/conf_background.jpg" %});">
+                </div>
+                <div class="infoProfesor">
+                    <br />
+                    <h5 class="nombreProfesor">{{ presentation.title }}</h5>
+                    {% if presentation.speaker.user.id == user.id %}
+                    <a href="{% url 'database:presentation_edit' conference_id=presentation.conference.id pk=presentation.id%}">
+                        (edit)
+                    </a>
+                    {% endif %}
+                </div>
+                <hr />
+                {{ presentation.information }}
+                <center>
+                    <h5>
+                        {{ presentation.date }}
+                    </h5>
+                </center>
+            </div>
+    
+            <div class="boxElement information">
+                    <strong>Speaker</strong>
+                    <br />
+                    <a href="{{ presentation.speaker.get_absolute_url }}"> {{ presentation.speaker.title }} {{ presentation.speaker.first_name }} {{ presentation.speaker.last_name }}</a>
+            </div>
+        
+            <div class="boxElement information">
+                <strong>Status</strong>
+                <br />
+                {{ presentation.status }}
+            </div>
+    
+        </div>
+        <div class="column column-middle">
+            <ul class="boxElementFirstChild mainContent">
+                <li class="listItemMiddle">
+                    <h4>Abstract</h4>
+                    <p>{{presentation.abstract}}</p>
+                </li>
+            </ul>
+        </div>
+        <div class="column column-right">
+            <div class="boxElement panel panel-default information">
+                <div class="panel-heading">
+                    <strong>Other presentations in this conference: </strong>
+                </div>
+                <ul class="profesoresSimilares">
+                    {% for presentation in other_presentations %}
+                        <li class="profesorSimilar">
+                            <a href="{{ presentation.get_absolute_url }}">{{presentation.title| truncatechars:50}}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <script>
+    
+        $('#see_more').on('click', function(evt) {
+            console.log(evt);
+    
+            $('#see_more').hide();
+            $('#truncated_text').hide();
+            $('#hidden_text_see_more').show();
+        })
+        </script>
+        <style>
+        #hidden_text_see_more {
+            display: none;
+        }
+        .clickable {
+            color: #007bff !important;
+            text-decoration: none !important;
+            background-color: transparent !important;
+        }
+        .clickable:hover {
+            text-decoration: underline !important;
+            cursor: pointer;
+        }
+
+        .profesorSimilar {
+            font-size: 0.8em;
+        }
+        </style>
+    </div>
+    {% endblock %}
+    

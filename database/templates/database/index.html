@@ -48,7 +48,7 @@
         display: flex;
         justify-content: center;
         align-content: center;
-        height: 100vh;
+        height: 100px;
     }
     h1 {
         display: flex;
@@ -58,7 +58,7 @@
     #particles-js {
         position: fixed;
         width: 100%;
-        height: 100%;
+        height: 100px;
     }
 
     .content {
@@ -110,7 +110,7 @@
             detect_on: 'canvas',
             events: {
                 onhover: { enable: false, mode: 'repulse' },
-                onclick: { enable: true, mode: 'push' },
+                onclick: { enable: false, mode: 'push' },
                 resize: true
             },
             modes: {

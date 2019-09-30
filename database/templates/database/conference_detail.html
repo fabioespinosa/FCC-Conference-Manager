@@ -1,32 +1,170 @@
-{% extends 'database/database.html' %}
+{% extends 'database/database.html' %} 
+{% load static %} 
 {% block navbarconference %}
-<li class="nav-item active"><a class="nav-link" href="{% url 'database:conferences' %}">Conferences</a></li>
-{% endblock %}
-{% block title %}{{ conference.name }}{% endblock %}
+<li class="nav-item active">
+    <a class="nav-link" href="{% url 'database:conferences' %}">Conferences</a>
+</li>
+{% endblock %} 
+{% block title %}{{ conference.name }}{% endblock %} 
 {% block text %}
-{% if conference.coordinator.user.id == user.id %}
-<h1> <a href="{{ conference.url }}">{{ conference.name }}</a> ({{ conference.short_name }}) <a href="{% url 'database:conference_edit' pk=conference.id %}">(edit)</a></h1>
-{% else %}
-<h1> <a href="{{ conference.url }}">{{ conference.name }}</a> ({{ conference.short_name }})</h1>
-{% endif %}
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-<h4> Location: {{ conference.town }}, {{ conference.country }}</h4>
-<h5> From {{ conference.start_date }} to {{ conference.end_date }}</h5>
-<h5> Coordinator: <a href="{{conference.coordinator.get_absolute_url }}">{{ conference.coordinator.title }} {{ conference.coordinator.first_name }} {{ conference.coordinator.last_name }}</a></h5>
-<h5> Field: {{ conference.category }}</h5>
-<h2>About </h2>
-<p>{{ conference.information }}</p>
 
-<h2> Presentations </h2>
-<ul>
-{% for presentation in conference.presentation_set.all %}
-    <li><a href="{{ presentation.get_absolute_url }}"> {{ presentation.title }} </a></li>
-{% endfor %}
-</ul>
+<div id="content" class="clearfix">
+    <div class="columns">
+        <div class="column column-left">
+            <div class="boxElement">
+                <div class="insideImage" style="background-image: url({% static "images/conf_background.jpg" %});">
+            </div>
+            <div class="infoProfesor">
+                <br />
+                <h5 class="nombreProfesor">{{ conference.name }}</h5>
+                <hr>
+                <p>{{ conference.town }}, {{ conference.country }}</p>
+                {% if conference.coordinator.user.id == user.id %}
+                <a href="{% url 'database:conference_edit' pk=conference.id %}"
+                    >(edit)</a
+                >
+                {% endif %}
+                <hr>
+                <ul class="statsProfesor">
+                    <li class="statProfesor">
+                        <a class="statProfesorLink">
+                            Category<h5 class="titulostat"><i>{{ conference.category }}</i></h5>
+                        </a>
+                    </li>
+                    <li class="statProfesor">
+                        <a class="statProfesorLink">
+                            Presentations<h5 class="titulostat"><i>{{conference.presentation_set.all|length}}</i></h5>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <hr />
+            <center>
+                <h5>
+                    {{ conference.start_date }} to {{ conference.end_date }}
+                </h5>
+            </center>
+        </div>
+
+        <div class="boxElement information">
+                <strong>Information</strong>
+                <br />
+                <span id="truncated_text">
+                    {{ conference.information|truncatechars:200 }}
+                </span>
+                {% if conference.information|length > 200 %}
+                    <a class="clickable" id="see_more">
+                        see full info.
+                    </a>
+                {% endif %}
+                <span id="hidden_text_see_more">
+                    {{ conference.information }}
+                </span>
+        </div>
+    
+        <div class="boxElement information">
+            <strong>Status</strong>
+            <br />
+            {{ conference.status }}
+        </div>
+
+
+        <div class="boxElement information">
+            <strong>Coordinator</strong>
+            <br />
+            <a href="{{ conference.coordinator.get_absolute_url }}"
+                >{{ conference.coordinator.title }}
+                {{ conference.coordinator.first_name }}
+                {{ conference.coordinator.last_name }}</a
+            >
+        </div>
+    </div>
+    <div class="column column-middle">
+        <ul class="boxElementFirstChild mainContent">
+            {% if conference.presentation_set.all %}
+                {% for presentation in conference.presentation_set.all %}
+                <li class="listItemMiddle">
+                    <div class="sobreCalificacion">
+                        <span class="carreraCalificacion">
+                            <a href="{{ presentation.get_absolute_url }}">
+                                {{ presentation.title }}
+                            </a>
+                        </span>
+                        <span class="fechaCalificacion">
+                            {{ presentation.date }}
+                        </span>
+                    </div>
+                    <div class="calificacion">
+                        <strong>By: </strong><a href="{{ presentation.speaker.get_absolute_url }}"> {{ presentation.speaker.title }} {{ presentation.speaker.first_name }} {{ presentation.speaker.last_name }}</a>
+
+                        <br /><br />
+                        <strong>Abstract: </strong>{{ presentation.abstract|truncatechars:300}}
+                        {% if presentation.abstract|length > 300 %}
+                        <a href="{{ presentation.get_absolute_url }}">
+                            read more.
+                        </a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            {% else %}
+                <li class="listItemMiddle">
+                    <h4>There are no presentations for this conference yet.</h4>
+                    </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="column column-right">
+        <div class="boxElement panel panel-default information">
+            <div class="panel-heading">
+                <strong>Featured conferences: </strong>
+            </div>
+            <ul class="profesoresSimilares">
+                {% for conference in featured_conferences %}
+                    <li class="profesorSimilar">
+                        <a href="{{ conference.get_absolute_url }}">{{conference.short_name| truncatechars:25}}</a>
+                        <p class="numeroResenasProfesorSimilar">{{ conference.town|truncatechars:50 }}, {{ conference.country|truncatechars:50 }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="boxElement panel panel-default information">
+                <div class="panel-heading">
+                    <strong>Upcoming conferences: </strong>
+                </div>
+                <ul class="profesoresSimilares">
+                    {% for conference in conference_list %}
+                        <li class="profesorSimilar">
+                            <a href="{{ conference.get_absolute_url }}">{{conference.short_name| truncatechars:25}}</a>
+                            <p class="numeroResenasProfesorSimilar">{{ conference.town|truncatechars:50 }}, {{ conference.country|truncatechars:50 }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+    </div>
+    <script>
+
+    $('#see_more').on('click', function(evt) {
+        console.log(evt);
+
+        $('#see_more').hide();
+        $('#truncated_text').hide();
+        $('#hidden_text_see_more').show();
+    })
+    </script>
+    <style>
+    #hidden_text_see_more {
+        display: none;
+    }
+    .clickable {
+        color: #007bff !important;
+        text-decoration: none !important;
+        background-color: transparent !important;
+    }
+    .clickable:hover {
+        text-decoration: underline !important;
+        cursor: pointer;
+    }
+    </style>
+</div>
 {% endblock %}

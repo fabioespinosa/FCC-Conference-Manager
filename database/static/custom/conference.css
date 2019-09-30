@@ -1,0 +1,208 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+    padding-left: 10px;
+    display: inline;
+  }
+  
+  h5 {
+    font-size: 14px;
+  }
+  
+  div {
+    display: block;
+  }
+  
+  body {
+    min-width: 100%;
+    background-color: #f5f8fa;
+    line-height: 1.6;
+  }
+  
+  p {
+    margin: 0 0 11px;
+  }
+  
+  ul {
+    margin-top: 0;
+    margin-bottom: 11px;
+  }
+  
+  .clearfix {
+    overflow: auto;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+  #content {
+    margin: 0 auto;
+  }
+  
+  .column {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .boxElement {
+    border: 1px solid;
+    border-radius: 4px;
+    border-color: #d3e0e0;
+    background-color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .boxElementFirstChild {
+    border: 1px solid;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-color: #d3e0e0;
+    background-color: #fff;
+    margin-bottom: 30px;
+  }
+  
+  .mainContent {
+    padding-left: 0px;
+    list-style: none;
+  }
+  
+  .listItemMiddle {
+    background-color: #fff;
+    display: block;
+    border: 1px solid #d3e0e9;
+    padding: 20px 20px 16px 20px;
+    position: relative;
+    overflow: visible;
+  }
+  
+  .sobreCalificacion {
+    color: rgb(80, 121, 180);
+  }
+  
+  .fechaCalificacion {
+    float: right;
+    font-style: italic;
+  }
+  
+  .insideImage {
+    height: 150px;
+    background-size: cover;
+    padding: 10px 15px;
+    border-bottom: 1 px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+  }
+  
+  .infoProfesor {
+    text-align: center;
+  }
+  
+  .nombreProfesor {
+    margin-bottom: 5px;
+    margin-top: 0;
+    font-size: 16px;
+    color: inherit;
+  }
+  
+  .descripcionProfesor {
+    margin-bottom: 30px;
+  }
+  
+  .calificacion {
+    display: table-cell;
+    vertical-align: top;
+    overflow: visible;
+    width: 1000px;
+  }
+  
+  .profesoresSimilares {
+    margin-top: 10px;
+    padding-left: 10px;
+    list-style: none;
+    color: rgba(1, 1, 1, 0.6);
+  }
+  
+  .profesorSimilar {
+    height: 45px;
+    display: block;
+    line-height: 1;
+    width: 100%;
+  }
+  
+  .numeroResenasProfesorSimilar {
+    font-size: 0.8em;
+  }
+  
+  .profesorSimilar:hover {
+    background-color: #f5f8fa;
+  }
+  
+  .information {
+    padding: 10px;
+  }
+
+  .statsProfesor {
+    list-style: none;
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  .statProfesor {
+    display: inline-block;
+    padding: 0 10px;
+    border-right: 1px solid #d4dbe0;
+  }
+
+  .statProfesor:last-child {
+    border-right: 0;
+  }
+
+  .statProfesorLink {
+    color:inherit;
+    text-decoration: inherit;
+  }
+
+  .tituloStat {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  
+  @media (min-width: 768px) {
+    #content {
+      width: 750px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+  
+  
+    .column-left {
+      width: 25%;
+      float: left;
+    }
+  
+    .column-middle {
+      width: 50%;
+      float: left;
+    }
+  
+    .column-right {
+      width: 25%;
+      float: left;
+    }
+  
+    #content {
+      width: 990px;
+    }
+  }
+  
+  @media (min-width: 1260px) {
+    #content {
+      width: 1230px;
+    }
+  }

@@ -35,7 +35,7 @@
 <script src="{% static "javascript/particles.min.js" %}"></script>
 <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
 
-<!-- <link rel="stylesheet" href="{% static "conference/output.css" %}" > -->
+<link rel="stylesheet" href="{% static "custom/conference.css" %}" >
 
 <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
 <title>{% block title %}{% endblock %}</title>
@@ -43,7 +43,7 @@
 
 {% block body %}
 <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'database:index' %}"><img class="fcc_logo" src="{% static "images/fcc_logo.png" %}"/>FCC Conference</a>
+        <a class="navbar-brand" href="{% url 'database:index' %}"><img class="fcc_logo" src="{% static "images/fcc_logo.png" %}"/> FCC Conferences</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
     </button>
@@ -61,9 +61,9 @@
             {% block navbarpeople %}
             <li class="nav-item"><a class="nav-link" href="{% url 'database:people' %}">People</a></li>
             {% endblock %}
-            {% block navbarsearch %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'database:search' %}">Search</a></li>
-            {% endblock %}
+            <!-- {% block navbarsearch %} -->
+            <!-- <li class="nav-item"><a class="nav-link" href="{% url 'database:search' %}">Search</a></li> -->
+            <!-- {% endblock %} -->
         </ul>
         {% if user.username %}
         <ul class="navbar-nav">
