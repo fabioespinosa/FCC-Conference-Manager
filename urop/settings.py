@@ -16,10 +16,11 @@ from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+# AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 
-
+AWS_ACCESS_KEY_ID = '2ce9a94968034059b929f18ac213e24c'
+AWS_SECRET_ACCESS_KEY = 'd01524b5cd894814bfad2adb7d9ef158'
 AWS_STORAGE_BUCKET_NAME = 'CONFERENCE'
 # AWS_S3_CUSTOM_DOMAIN = '%s.s3.cern.ch' % AWS_STORAGE_BUCKET_NAME
 
