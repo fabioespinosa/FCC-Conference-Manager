@@ -37,3 +37,10 @@ class PresentationFilter(django_filters.FilterSet):
     class Meta:
         model = Presentation
         fields = ['status']
+
+
+class PresentationInsideConferenceFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Presentation
+        fields = ['title']

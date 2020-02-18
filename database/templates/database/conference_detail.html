@@ -81,6 +81,16 @@
     </div>
     <div class="column column-middle">
         <ul class="boxElementFirstChild mainContent">
+          <li class="listItemMiddle">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search presentations in this conference..." aria-label="Search presentations in this conference..." aria-describedby="button-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+            </div>
+          </div>
+          </li>
+        </ul>
+        <ul class="boxElementFirstChild mainContent">
             {% if conference.presentation_set.all %}
                 {% for presentation in conference.presentation_set.all %}
                 <li class="listItemMiddle">

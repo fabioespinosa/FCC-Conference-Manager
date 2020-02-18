@@ -19,7 +19,7 @@ from django.utils import timezone
 from .forms import RegistrationForm, EditPeopleForm, EditConferenceForm, EditPresentationForm
 from .forms import PasswordChangeForm
 from .models import Conference, Presentation, UserProfile, UserMessage
-from .filters import ConferenceFilter, PresentationFilter
+from .filters import ConferenceFilter, PresentationFilter, PresentationInsideConferenceFilter
 
 
 class IndexView(generic.TemplateView):
@@ -99,8 +99,14 @@ class ConferenceDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ConferenceDetailView, self).get_context_data(**kwargs)
         context['is_coordinator'] = True
-        context['featured_conferences'] = Conference.objects.filter(start_date__lte=timezone.now()).order_by('start_date')[:5]
-        context['conference_list'] = Conference.objects.filter(start_date__lte=timezone.now()).order_by('-start_date')[:10]
+        context['featured_conferences'] = Conference.objects.filter(
+            start_date__lte=timezone.now()).order_by('start_date')[:5]
+        context['conference_list'] = Conference.objects.filter(
+            start_date__lte=timezone.now()).order_by('-start_date')[:10]
+        print(self.get_queryset())
+        context['filter'] = PresentationInsideConferenceFilter(
+            self.request.GET, queryset=self.get_queryset())
+        print(context['filter'])
         return context
 
     def get(self, request, *args, **kwargs):
@@ -126,6 +132,7 @@ class PresentationView(LoginRequiredMixin, FilterView):
     context_object_name = 'presentation_list'
     login_url = reverse_lazy('database:login')
     filterset_class = PresentationFilter
+
     def get_queryset(self):
         return Presentation.objects.order_by('-date')
 
@@ -136,9 +143,11 @@ class PresentationDetailView(LoginRequiredMixin, generic.DetailView):
     login_url = reverse_lazy('database:login')
 
     def get_context_data(self, **kwargs):
-        context = super(PresentationDetailView, self).get_context_data(**kwargs)
+        context = super(PresentationDetailView,
+                        self).get_context_data(**kwargs)
         conference_id = self.kwargs.get('conference_id')
-        context['other_presentations'] = Presentation.objects.filter(conference_id=conference_id)
+        context['other_presentations'] = Presentation.objects.filter(
+            conference_id=conference_id)
         return context
 
 

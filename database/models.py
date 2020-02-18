@@ -82,6 +82,7 @@ class Presentation(models.Model):
     group = models.CharField(max_length=200)
     status = models.TextField()
     information = models.TextField()
+    presentation_file = models.FileField()
 
     def __str__(self):
         return self.title
