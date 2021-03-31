@@ -71,6 +71,12 @@ class ConferenceAssistance(models.Model):
         return self.conference + '-' + self.assistant
 
 
+presentation_states = (
+    ('pending', 'pending'),
+    ('approved', 'approved'),
+)
+
+
 class Presentation(models.Model):
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
     speaker = models.ForeignKey(
@@ -81,6 +87,9 @@ class Presentation(models.Model):
     category = models.CharField(max_length=200)
     group = models.CharField(max_length=200)
     status = models.TextField()
+    state = models.CharField(
+        max_length=20, choices=presentation_states, default='pending'
+    )
     information = models.TextField()
     presentation_file = models.FileField()
 

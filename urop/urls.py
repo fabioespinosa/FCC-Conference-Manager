@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.urls import include, path  # For django versions from 2.0 and up
 from django.contrib import admin
 from allauth.account import views as allauth_views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 
 urlpatterns = [
@@ -25,6 +26,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
 ]
+urlpatterns += staticfiles_urlpatterns()
 
 # if settings.DEBUG:
 import debug_toolbar

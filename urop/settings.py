@@ -19,8 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 # AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 
-AWS_ACCESS_KEY_ID = '2ce9a94968034059b929f18ac213e24c'
-AWS_SECRET_ACCESS_KEY = 'd01524b5cd894814bfad2adb7d9ef158'
+
 AWS_STORAGE_BUCKET_NAME = 'CONFERENCE'
 # AWS_S3_CUSTOM_DOMAIN = '%s.s3.cern.ch' % AWS_STORAGE_BUCKET_NAME
 
@@ -34,6 +33,7 @@ DEFAULT_FILE_STORAGE = 'urop.storage_backends.MediaStorage'
 
 
 print(os.environ.get('DJANGO_DEBUG'))
+print(os.environ.get('DJANGO_DATABASE_HOST'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -122,9 +122,9 @@ DATABASES = {
     'default': {
         'ENGINE': config('DJANGO_DATABASE_ENGINE', default='django.db.backends.postgresql'),
         'NAME': config('DJANGO_DATABASE_NAME', default='django_urop'),
-        'USER': config('DJANGO_DATABASE_USER', default='fabioespinosa'),
+        'USER': config('DJANGO_DATABASE_USER', default='postgres'),
         'PASSWORD': config('DJANGO_DATABASE_PASSWORD', default=''),
-        'HOST': config('DJANGO_DATABASE_HOST', default=''),
+        'HOST': config('DJANGO_DATABASE_HOST', default='localhost'),
         'PORT': config('DJANGO_DATABASE_PORT', default=''),
     }
 }
@@ -158,7 +158,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-#HAYSTACK_DEFAULT_OPERATOR = 'OR'
+# HAYSTACK_DEFAULT_OPERATOR = 'OR'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -189,7 +189,7 @@ ADMINS = [('Fabio Espinosa', 'f.e@cern.ch')]
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATIC_ROOT = os.path.join(BASE_DIR, 'wsgi/static')
+STATIC_ROOT = os.path.join(BASE_DIR, '/wsgi/static')
 
 INTERNAL_IPS = [
     # ...
