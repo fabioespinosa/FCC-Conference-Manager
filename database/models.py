@@ -1,19 +1,22 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.conf import settings
 
 
-class UserProfile(models.Model):
+class UserProfile(AbstractUser):
     # UserProfile is different than auth_user,
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    institution = models.CharField(max_length=200)
-    title = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=200)
-    status = models.TextField()
-    information = models.TextField()
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)
+    institution = models.CharField(max_length=200, null=True)
+    title = models.CharField(max_length=50, null=True)
+    first_name = models.CharField(max_length=150, null=True)
+    last_name = models.CharField(max_length=200, null=True)
+    password = models.CharField(max_length=128)
+    status = models.TextField(null=True)
+    information = models.TextField(null=True)
     speaker = models.BooleanField(default=False)
     coordinator = models.BooleanField(default=False)
 
@@ -29,9 +32,9 @@ class UserMessage(models.Model):
     message = models.TextField()
     seen = models.BooleanField(default=False)
     message_to = models.ForeignKey(
-        UserProfile, related_name='messages_received', on_delete=models.CASCADE)
+        get_user_model(), related_name='messages_received', on_delete=models.CASCADE)
     message_from = models.ForeignKey(
-        UserProfile, related_name='messages_sent', on_delete=models.CASCADE)
+        get_user_model(), related_name='messages_sent', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.message
@@ -43,7 +46,7 @@ class UserMessage(models.Model):
 class Conference(models.Model):
     name = models.TextField()
     assistants = models.ManyToManyField(
-        UserProfile, through='ConferenceAssistance', through_fields=('conference', 'assistant'), related_name="user_conferences")
+        get_user_model(), through='ConferenceAssistance', through_fields=('conference', 'assistant'), related_name="user_conferences")
     short_name = models.CharField(max_length=200)
     start_date = models.DateField('Start Date')
     end_date = models.DateField('End Date')
@@ -63,7 +66,8 @@ class Conference(models.Model):
 
 class ConferenceAssistance(models.Model):
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
-    assistant = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    assistant = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE)
     coordinator = models.BooleanField(default=False)
     join_date = models.DateField(auto_now_add=True)
 
@@ -80,7 +84,7 @@ presentation_states = (
 class Presentation(models.Model):
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
     speaker = models.ForeignKey(
-        UserProfile, null=True, on_delete=models.CASCADE)
+        get_user_model(), null=True, on_delete=models.CASCADE)
     title = models.TextField()
     abstract = models.TextField()
     date = models.DateField('Presentation Date')
@@ -91,7 +95,7 @@ class Presentation(models.Model):
         max_length=20, choices=presentation_states, default='pending'
     )
     information = models.TextField()
-    presentation_file = models.FileField()
+    presentation_file = models.FileField(blank=True)
 
     def __str__(self):
         return self.title

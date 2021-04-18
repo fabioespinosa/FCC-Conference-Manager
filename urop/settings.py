@@ -103,12 +103,15 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'database.UserProfile'
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 WSGI_APPLICATION = 'urop.wsgi.application'
+
 
 
 # Database
@@ -121,11 +124,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': config('DJANGO_DATABASE_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config('DJANGO_DATABASE_NAME', default='django_urop'),
-        'USER': config('DJANGO_DATABASE_USER', default='postgres'),
-        'PASSWORD': config('DJANGO_DATABASE_PASSWORD', default=''),
+        'NAME': config('DJANGO_DATABASE_NAME', default='fcc-ee-conference'),
+        'USER': config('DJANGO_DATABASE_USER', default='admin'),
+        'PASSWORD': config('DJANGO_DATABASE_PASSWORD', default='changeme'),
         'HOST': config('DJANGO_DATABASE_HOST', default='localhost'),
-        'PORT': config('DJANGO_DATABASE_PORT', default=''),
+        'PORT': config('DJANGO_DATABASE_PORT', default='5433'),
     }
 }
 

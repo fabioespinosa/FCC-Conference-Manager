@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from django.contrib.auth import logout, get_user_model
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import render
 from django_filters.views import FilterView
@@ -29,9 +29,8 @@ class IndexView(generic.TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         user = self.request.user
         if user.is_authenticated:
-            userprofile = UserProfile.objects.get_or_create(user=user)[0]
-            context['conference_list'] = userprofile.user_conferences.all()
-            context['presentation_list'] = userprofile.presentation_set.all()
+            context['conference_list'] = user.user_conferences.all()
+            context['presentation_list'] = user.presentation_set.all()
         else:
             context['conference_list'] = Conference.objects.filter(
                 start_date__lte=timezone.now()).order_by('-start_date')[:5]
@@ -55,24 +54,23 @@ class RegisterView(SuccessMessageMixin, generic.FormView):
     def form_valid(self, form):
         username = form.cleaned_data['username']
         email = form.cleaned_data['email']
-        count = len(User.objects.filter(username=username))
+        count = len(get_user_model().objects.filter(username=username))
         if count > 0:
             form.add_error(field='username', error=forms.ValidationError(
                 "That username is taken."))
             return super(RegisterView, self).form_invalid(form)
         # create the user
-        user = User.objects.create_user(
-            username=username, password=form.cleaned_data['password'], email=email)
-        # authenticate the user
+        user = get_user_model().objects.create_user(
+            username=username, password=form.cleaned_data[
+                'password'], email=email, institution=form.cleaned_data['institution'],
+            first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
+            title=form.cleaned_data['title'], status="user", information=form.cleaned_data['about']
+        )
+        # login the user
         user = authenticate(username=username,
                             password=form.cleaned_data['password'])
-        # login the user
         auth_login(self.request, user)
         # now create the user profile and save it to the database
-        userprofile = UserProfile(user=user, institution=form.cleaned_data['institution'],
-                                  first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
-                                  title=form.cleaned_data['title'], status="user", information=form.cleaned_data['about'])
-        userprofile.save()
         return super(RegisterView, self).form_valid(form)
 
 
@@ -168,7 +166,7 @@ class PeopleView(LoginRequiredMixin, generic.ListView):
     login_url = reverse_lazy('database:login')
 
     def get_queryset(self):
-        return UserProfile.objects.filter(Q(speaker=True) | Q(coordinator=True)).order_by('-last_name')
+        return get_user_model().objects.filter(Q(speaker=True) | Q(coordinator=True)).order_by('-last_name')
 
 
 class PeopleDetailView(LoginRequiredMixin, SingleObjectMixin, generic.ListView):
@@ -176,7 +174,7 @@ class PeopleDetailView(LoginRequiredMixin, SingleObjectMixin, generic.ListView):
     login_url = reverse_lazy('database:login')
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object(queryset=UserProfile.objects.all())
+        self.object = self.get_object(queryset=get_user_model().objects.all())
         return super(PeopleDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -195,7 +193,7 @@ class PeopleDetailView(LoginRequiredMixin, SingleObjectMixin, generic.ListView):
 
 
 class PeopleEditView(LoginRequiredMixin, SuccessMessageMixin, generic.View):
-    model = UserProfile
+    model = get_user_model()
     success_message = "Profile details updated"
     template_name = "database/people_edit.html"
     fields = ['institution', 'title', 'first_name',
@@ -206,7 +204,7 @@ class PeopleEditView(LoginRequiredMixin, SuccessMessageMixin, generic.View):
 
 
 class UserProfileDisplay(generic.DetailView):
-    model = UserProfile
+    model = get_user_model()
     template_name = 'database/user_profile_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -216,7 +214,7 @@ class UserProfileDisplay(generic.DetailView):
 
 
 class UserPasswordChange(SingleObjectMixin, SuccessMessageMixin, generic.FormView):
-    model = UserProfile
+    model = get_user_model()
     form_class = PasswordChangeForm
     template_name = 'database/user_profile_detail.html'
     success_message = "Your password was successfully changed."
@@ -236,7 +234,7 @@ class UserPasswordChange(SingleObjectMixin, SuccessMessageMixin, generic.FormVie
     def form_valid(self, form):
         new_password = form.cleaned_data['new_password']
         user_name = self.request.user.username
-        user = User.objects.get(username=user_name)
+        user = get_user_model().objects.get(username=user_name)
         if user is not None:
             user.set_password(new_password)
             user.save()
@@ -265,7 +263,7 @@ class UserProfileView(LoginRequiredMixin, generic.View):
 
 
 class UserView(LoginRequiredMixin, generic.DetailView):
-    model = User
+    model = get_user_model()
     template_name = 'database/user_detail.html'
     login_url = reverse_lazy('database:login')
 

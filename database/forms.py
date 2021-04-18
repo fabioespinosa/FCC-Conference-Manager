@@ -1,6 +1,7 @@
 from django import forms
 from haystack.forms import SearchForm
 from .models import Conference, Presentation, UserProfile
+from django.contrib.auth import get_user_model
 
 
 class RegistrationForm(forms.Form):
@@ -68,7 +69,7 @@ class EditPresentationForm(forms.ModelForm):
 
 class EditPeopleForm(forms.ModelForm):
     class Meta:
-        model = UserProfile
+        model = get_user_model()
         exclude = ['user', 'speaker', 'coordinator']
 
 
@@ -111,7 +112,7 @@ class CustomSearchForm(SearchForm):
                 sqs = sqs.filter(
                     date__gte=self.cleaned_data['filter_end_date'])
         else:
-            sqs = sqs.models(UserProfile)
+            sqs = sqs.models(get_user_model())
         # Check to see if a start_date was chosen.
 
         # Check to see if an end_date was chosen.
