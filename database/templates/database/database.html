@@ -67,12 +67,8 @@
         </ul>
         {% if user.username %}
         <ul class="navbar-nav">
-            {% if user.userprofile %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'database:user_profile_detail' user.userprofile.id %}"><span class="glyphicon glyphicon-user"></span>{{ user.username }}'s Profile</a></li>
-            {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'database:user_detail' user.id %}"><span class="glyphicon glyphicon-user"></span>{{ user.username }}'s Profile</a></li>
-            {% endif %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'database:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:user_detail' user.id %}"><span class="glyphicon glyphicon-user"></span>{{ user.username }}'s Profile</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'database:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
         </ul>
         {% else %}
         <ul class="navbar-nav">

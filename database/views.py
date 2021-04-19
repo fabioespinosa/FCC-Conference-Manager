@@ -20,6 +20,7 @@ from .forms import RegistrationForm, EditPeopleForm, EditConferenceForm, EditPre
 from .forms import PasswordChangeForm
 from .models import Conference, Presentation, UserProfile, UserMessage
 from .filters import ConferenceFilter, PresentationFilter, PresentationInsideConferenceFilter
+from django.db.models import Q
 
 
 class IndexView(generic.TemplateView):
@@ -98,13 +99,13 @@ class ConferenceDetailView(LoginRequiredMixin, generic.DetailView):
         context = super(ConferenceDetailView, self).get_context_data(**kwargs)
         context['is_coordinator'] = True
         context['featured_conferences'] = Conference.objects.filter(
-            start_date__lte=timezone.now()).order_by('start_date')[:5]
+            start_date__gte=timezone.now()).order_by('start_date')[:5]
         context['conference_list'] = Conference.objects.filter(
-            start_date__lte=timezone.now()).order_by('-start_date')[:10]
-        print(self.get_queryset())
+            Q(start_date__gte=timezone.now())).order_by('-start_date')[:10]
+        # print(self.get_queryset())
         context['filter'] = PresentationInsideConferenceFilter(
             self.request.GET, queryset=self.get_queryset())
-        print(context['filter'])
+        # print(context['filter'])
         return context
 
     def get(self, request, *args, **kwargs):
@@ -175,29 +176,37 @@ class PeopleDetailView(LoginRequiredMixin, SingleObjectMixin, generic.ListView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=get_user_model().objects.all())
+        self.user = request.user
         return super(PeopleDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(PeopleDetailView, self).get_context_data(**kwargs)
-        context['userprofile'] = self.object
+        context['user_profile'] = self.object
+        context['user'] = self.user
         temp = context['object_list']
         split_index = len(self.object.presentation_set.all())
         context['exist_presentations'] = (split_index > 0)
-        context['exist_conferences'] = ((len(temp)-split_index) > 0)
-        context['presentation_list'] = temp[:split_index]
+        context['presentation_list'] = temp[: split_index]
         context['conference_list'] = temp[split_index:]
         return context
 
     def get_queryset(self):
-        return list(chain(self.object.presentation_set.all(), self.object.conference_set.all()))
+        return list(chain(self.object.presentation_set.all(), self.object.conferenceassistance_set.all()))
 
 
-class PeopleEditView(LoginRequiredMixin, SuccessMessageMixin, generic.View):
+class PeopleEditView(LoginRequiredMixin, SuccessMessageMixin, generic.FormView):
     model = get_user_model()
+    form_class = EditPeopleForm
     success_message = "Profile details updated"
     template_name = "database/people_edit.html"
     fields = ['institution', 'title', 'first_name',
               'last_name', 'status', 'information']
+
+    def get(self, request, *args, **kwargs):
+        if request.user.id == int(kwargs['pk']):
+            return super(PeopleEditView, self).get(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden()
 
     def get_success_message(self, cleaned_data):
         return self.success_message
@@ -267,6 +276,12 @@ class UserView(LoginRequiredMixin, generic.DetailView):
     template_name = 'database/user_detail.html'
     login_url = reverse_lazy('database:login')
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserView, self).get_context_data(**kwargs)
+        self.user = self.request.user
+        context['user'] = self.user
+        return context
+
 
 class MessageView(generic.View):
 
@@ -276,7 +291,7 @@ class MessageView(generic.View):
         return HttpResponse('')
 
 
-@login_required
+@ login_required
 def logout_view(request):
     """
     Logout current user (also from CERN)

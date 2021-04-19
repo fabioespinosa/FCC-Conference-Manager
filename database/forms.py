@@ -70,7 +70,8 @@ class EditPresentationForm(forms.ModelForm):
 class EditPeopleForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        exclude = ['user', 'speaker', 'coordinator']
+        exclude = ['user', 'speaker', 'coordinator', 'password', 'last_login', 'user_permissions',
+                   'username', 'email', 'date_joined', 'active', 'is_active', 'is_staff', 'is_superuser', 'groups']
 
 
 class CustomSearchForm(SearchForm):

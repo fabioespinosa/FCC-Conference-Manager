@@ -2,9 +2,9 @@
 {% block navbarpeople %}
 <li class="nav-item active"><a class="nav-link" href="{% url 'database:people' %}">People</a></li>
 {% endblock %}
-{% block title %}{{ userprofile.last_name }}, {{ userprofile.first_name }}{% endblock %}
+{% block title %}{{ user_profile.last_name }}, {{ user_profile.first_name }}{% endblock %}
 {% block text %}
-<h1>{{ userprofile.title }} {{ userprofile.first_name }} {{ userprofile.last_name }} {% if userprofile.user.id == user.id %}<a href="{% url 'database:people_edit' pk=userprofile.id %}">(edit)</a>{% endif %}</h1>
+<h1>{{ user_profile.title }} {{ user_profile.first_name }} {{ user_profile.last_name }} {% if user_profile.id == user.id %}<a href="{% url 'database:people_edit' pk=user.id %}">(edit)</a>{% endif %}</h1>
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
@@ -12,27 +12,27 @@
         {% endfor %}
     </ul>
 {% endif %}
-<h4>Institution: {{ userprofile.institution }}</h4>
+<h4>Institution: {{ user_profile.institution }}</h4>
 <h3>About</h3>
-<p>{{ userprofile.information }}</p>
+<p>{{ user_profile.information }}</p>
 <h3> Organized Conferences </h3>
-{% if userprofile.coordinator %}
+{% if user_profile.coordinator %}
     <ul>
         {% for conference in conference_list %}
             <li>{{ conference.start_date }}-{{ conference.end_date }}: <a href="{{ conference.get_absolute_url }}">{{ conference.name }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
-    <p> No conferences organized. </p>
+    <p> No conferences organized yet. </p>
 {% endif %}
 <h3> Presentations Given </h3>
-{% if userprofile.speaker %}
+{% if presentation_list %}
     <ul>
         {% for presentation in presentation_list %}
             <li>{{ presentation.date }}: <a href="{{ presentation.get_absolute_url }}">{{ presentation.title }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
-    <p> No presentations given. </p>
+    <p> No presentations given yet. </p>
 {% endif %}
 {% endblock %}

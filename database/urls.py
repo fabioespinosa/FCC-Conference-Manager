@@ -37,4 +37,3 @@ urlpatterns = [
     url(r"^messages/(?P<id>[0-9]+)/$",
         views.MessageView.as_view(), name="user_message")
 ]
-
