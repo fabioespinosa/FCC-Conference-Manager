@@ -15,17 +15,20 @@
 
 # COPY . .
 
+FROM registry.access.redhat.com/ubi8/python-38
 
 # # start server
 # EXPOSE 8000
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # Dockerfile
-FROM python:3.6.8
+
+USER 0
 WORKDIR /app
+
 COPY requirements.txt /app/
 
 RUN pip install -r requirements.txt 
-RUN chmod -R 777 /app/
+# RUN chmod -R 777 /app/wsgi
 RUN mkdir media static logs
 
 COPY . .
@@ -34,4 +37,8 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 STOPSIGNAL SIGINT
 COPY ./docker-entrypoint.sh /
+
+
+USER 1001
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
